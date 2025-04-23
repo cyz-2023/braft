@@ -2148,6 +2148,9 @@ int NodeImpl::handle_pre_vote_request(const RequestVoteRequest* request,
         // pre_vote not need ABA check after unlock&lock
 
         int64_t votable_time = _follower_lease.votable_time_from_now();
+        if (_state == STATE_LEADER) {
+            votable_time = _leader_lease.votable_time_from_now();
+        }
         bool grantable = (LogId(request->last_log_index(), request->last_log_term())
                         >= last_log_id);
         if (grantable) {

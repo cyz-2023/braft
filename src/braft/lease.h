@@ -50,6 +50,7 @@ public:
     void on_lease_start(int64_t expect_lease_epoch, int64_t last_active_timestamp);
     void get_lease_info(LeaseInfo* lease_info);
     void renew(int64_t last_active_timestamp);
+    int64_t votable_time_from_now();
     int64_t lease_epoch();
     void reset_election_timeout_ms(int64_t election_timeout_ms);
 

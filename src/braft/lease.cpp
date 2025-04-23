@@ -91,6 +91,19 @@ void LeaderLease::reset_election_timeout_ms(int64_t election_timeout_ms) {
     _election_timeout_ms = election_timeout_ms;
 }
 
+int64_t LeaderLease::votable_time_from_now() {
+    if (!FLAGS_raft_enable_leader_lease) {
+        return 0;
+    }
+
+    int64_t now = butil::monotonic_time_ms();
+    int64_t votable_timestamp = _last_active_timestamp + _election_timeout_ms;
+    if (now >= votable_timestamp) {
+        return 0;
+    }
+    return votable_timestamp - now;
+}
+
 void FollowerLease::init(int64_t election_timeout_ms, int64_t max_clock_drift_ms) {
     _election_timeout_ms = election_timeout_ms;
     _max_clock_drift_ms = max_clock_drift_ms;
