@@ -2066,12 +2066,21 @@ int NodeImpl::handle_pre_vote_request(const RequestVoteRequest* request,
         lck.lock();
         // pre_vote not need ABA check after unlock&lock
 
-        int64_t votable_time = _follower_lease.votable_time_from_now();
         bool grantable = (LogId(request->last_log_index(), request->last_log_term())
                         >= last_log_id);
         if (grantable) {
-            granted = (votable_time == 0);
-            rejected_by_lease = (votable_time > 0);
+            if (_state == STATE_LEADER) {
+                lck.unlock();
+                if (is_leader_lease_valid()) {
+                    granted = false;
+                    rejected_by_lease = true;
+                }
+                lck.lock();
+            } else {
+                int64_t votable_time = _follower_lease.votable_time_from_now();
+                granted = (votable_time == 0);
+                rejected_by_lease = (votable_time > 0);
+            }
         }
 
         LOG(INFO) << "node " << _group_id << ":" << _server_id

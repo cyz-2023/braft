@@ -53,8 +53,8 @@ http_archive(
 
 http_archive(
     name = "com_github_brpc_brpc",
-    strip_prefix = "incubator-brpc-2b748f82c3447196c8ce372733e5af8f8d76cef5",
-    url = "https://github.com/apache/incubator-brpc/archive/2b748f82c3447196c8ce372733e5af8f8d76cef5.tar.gz",
+    strip_prefix = "brpc-2b748f82c3447196c8ce372733e5af8f8d76cef5",
+    url = "https://github.com/apache/brpc/archive/2b748f82c3447196c8ce372733e5af8f8d76cef5.tar.gz",
 )
 
 bind(
